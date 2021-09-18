@@ -49,7 +49,7 @@ export default [
     component: './TableList',
   },
   {
-    name: 'list.table-list',
+    name: 'list.basic-list',
     icon: 'table',
     path: '/pipeline/list',
     component: './PipelineList',

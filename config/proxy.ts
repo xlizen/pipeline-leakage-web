@@ -8,24 +8,24 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'https://preview.pro.ant.design',
+    '/dev/': {
+      target: 'http://localhost:8085',
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: { '^/dev': '' },
     },
   },
   test: {
-    '/api/': {
-      target: 'https://preview.pro.ant.design',
+    '/api/schdulerJob/': {
+      target: 'http://127.0.0.1:8085',
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: { '^/api': '/' },
     },
   },
   pre: {
-    '/api/': {
-      target: 'your pre url',
+    '/api/schdulerJob/': {
+      target: 'http://127.0.0.1:8085',
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: { '^/api': '/' },
     },
   },
 };

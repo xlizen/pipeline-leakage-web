@@ -106,11 +106,11 @@ declare namespace API {
     standard: number;
     duration: number;
     referencePoint?: string;
-    sensors?: Sersor[];
+    sensorList?: Sersor[];
   };
 
-  type Sensor = {
-    id: string;
+  type SensorListItem = {
+    no: string;
     currentValue?: number;
     diffValue?: number;
     averageValue?: number;
@@ -128,22 +128,24 @@ declare namespace API {
     name?: string;
     standard?: number;
     duration?: number;
-    pageSize?: number;
-    currentPage?: number;
+    limit?: number;
+    page?: number;
   };
 
   type CalibrationParam = {
-    pipeline: string;
+    pipelineId: string;
     create: string[];
   };
 
   type SchedulerJobItem = {
+    id?: string | undefined;
     jobGroup: string;
     jobName: string;
-    content: string;
+    content?: string;
     jobInterval: number;
     runType: number;
-    status: number;
+    status: string | undefined;
+    pipeLineId: string;
   };
 
   type Result<DataType> = {

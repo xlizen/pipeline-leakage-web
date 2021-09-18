@@ -13,7 +13,7 @@ const genList = (current: number, pageSize: number) => {
       xlsFileName: '',
       standard: index % 5,
       duration: index % 3,
-      sensors: genSensors(index.toString(), i % 5),
+      sensorList: genSensors(index.toString(), i % 5),
     });
   }
   tableListDataSource.reverse();
@@ -21,15 +21,15 @@ const genList = (current: number, pageSize: number) => {
 };
 
 const genSensors = (pipelineId: string, size: number) => {
-  const sensors: API.Sensor[] = [];
+  const sensors: API.SensorListItem[] = [];
   for (let i = 0; i < size; i++) {
     sensors.push({
-      id: `${pipelineId}:${i}`,
+      no: `${pipelineId}:${i}`,
       pre: i - 1 < 0 ? undefined : `${pipelineId}:${i - 1}`,
       next: i + 1 >= size ? undefined : `${pipelineId}:${i + 1}`,
       r: 0.225,
       l: 120,
-      type: i == 0 ? 4 : 3,
+      type: i == 0 ? 4 : 1,
       head: `${pipelineId}:0`,
       createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
     });
@@ -59,10 +59,7 @@ function getPipeline(req: Request, res: Response, u: string) {
           if (!filter[key]) {
             return true;
           }
-          if (filter[key] != '' && filter[key].includes(`${item[key]}`)) {
-            return true;
-          }
-          return false;
+          return filter[key] != '' && filter[key].includes(`${item[key]}`);
         });
       });
     }
@@ -85,15 +82,72 @@ function getPipeline(req: Request, res: Response, u: string) {
 }
 
 function getIdsEnum(req: Request, res: Response, u: string) {
-  let result = Object.create(null)
-   tableListDataSource.forEach((item) => result[item.id]=item.name);
+  let result = Object.create(null);
+  tableListDataSource.forEach((item) => (result[item.id] = item.name));
   res.json({
     total: 1,
     data: result,
   });
 }
 
+function postPipeline(req: Request, res: Response, u: string, b: Request) {
+  let realUrl = u;
+  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+    realUrl = req.url;
+  }
+
+  const body = (b && b.body) || req.body;
+  const { method, name, standard, duration, referencePoint, id } = body;
+
+  switch (method) {
+    /* eslint no-case-declarations:0 */
+    case 'delete':
+      tableListDataSource = tableListDataSource.filter((item) => id.indexOf(item.id) === -1);
+      break;
+    case 'post':
+      (() => {
+        const newPipeline: API.PipeLineListItem = {
+          id: tableListDataSource.length.toString(),
+          xlsFileName: '',
+          name,
+          standard,
+          duration,
+          referencePoint,
+        };
+        tableListDataSource.unshift(newPipeline);
+        return res.json(newPipeline);
+      })();
+      return;
+
+    case 'update':
+      (() => {
+        let newRule = {};
+        tableListDataSource = tableListDataSource.map((item) => {
+          if (item.id === id) {
+            newRule = { ...item, name, standard, duration, referencePoint };
+            return { ...item, name, standard, duration, referencePoint };
+          }
+          return item;
+        });
+        return res.json(newRule);
+      })();
+      return;
+    default:
+      break;
+  }
+
+  const result = {
+    list: tableListDataSource,
+    pagination: {
+      total: tableListDataSource.length,
+    },
+  };
+
+  res.json(result);
+}
+
 export default {
   'GET /api/pipeline/list': getPipeline,
   'GET /api/pipeline/ids': getIdsEnum,
+  'POST /api/pipeline': postPipeline,
 };
