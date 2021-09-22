@@ -30,6 +30,8 @@ export default {
   'menu.list.search-list.articles': '搜索列表（文章）',
   'menu.list.search-list.projects': '搜索列表（项目）',
   'menu.list.search-list.applications': '搜索列表（应用）',
+  'menu.list.pipeline': '管网数据',
+  'menu.list.system': '系统设置',
   'menu.profile': '详情页',
   'menu.profile.basic': '基础详情页',
   'menu.profile.advanced': '高级详情页',

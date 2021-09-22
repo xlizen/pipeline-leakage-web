@@ -53,10 +53,11 @@ export async function deletePipeline(data: API.PipeLineListItem, options?: Recor
 }
 
 /** 新建规则 POST /api/rule */
-export async function recordZero(params: Record<string, string | number>) {
+export async function recordZero(data: Record<string, string | number>) {
   return request<API.Result<null>>('/dev/flow/recordStand', {
     method: 'POST',
-    ...params,
+    data,
+    requestType: 'form',
   });
 }
 

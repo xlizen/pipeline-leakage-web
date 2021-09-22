@@ -1,4 +1,4 @@
-import { pipelineMap } from '@/services/ant-design-pro/pipelineApi';
+import { pipelineMap } from '@/services/monitor/pipeline';
 import type { Effect, Reducer, Subscription } from 'umi';
 
 export type CalibrationModelState = {

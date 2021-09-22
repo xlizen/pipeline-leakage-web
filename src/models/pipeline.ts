@@ -1,5 +1,5 @@
 import type {Effect, Reducer, Subscription} from 'umi';
-import {pipelines} from "@/services/ant-design-pro/pipelineApi";
+import {pipelines} from "@/services/monitor/pipeline";
 
 export type PipeLineModelState = {
   data: API.PipeLineListItem[];

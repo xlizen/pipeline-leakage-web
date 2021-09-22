@@ -49,13 +49,13 @@ export default [
     component: './TableList',
   },
   {
-    name: 'list.basic-list',
+    name: 'list.pipeline',
     icon: 'table',
     path: '/pipeline/list',
     component: './PipelineList',
   },
   {
-    name: 'list.table-list',
+    name: 'list.system',
     icon: 'table',
     path: '/system/list',
     component: './System',
