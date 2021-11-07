@@ -1,22 +1,22 @@
-import type {CalibrationModelState} from '@/models/calibration';
-import {PageContainer} from '@ant-design/pro-layout';
-import React, {useRef, useState} from 'react';
-import type {Dispatch} from 'umi';
-import {connect} from 'umi';
-import {ProFormDateTimeRangePicker, ProFormSelect, QueryFilter} from '@ant-design/pro-form';
-import {Button, Card, message, Tag} from 'antd';
-import type {ActionType, ProColumns} from '@ant-design/pro-table';
+import type { CalibrationModelState } from '@/models/calibration';
+import { PageContainer } from '@ant-design/pro-layout';
+import React, { useRef, useState } from 'react';
+import type { Dispatch } from 'umi';
+import { connect } from 'umi';
+import { ProFormDateTimeRangePicker, ProFormSelect, QueryFilter } from '@ant-design/pro-form';
+import { Button, Card, message, Tag } from 'antd';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import SchedulerJobForm from '@/pages/System/components/SchedulerJobForm';
 import TableOperateCell from '@/components/TableOperateCell';
-import {PlusOutlined} from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import {
   deleteSchedulerJob,
   saveSchedulerJob,
   schedulerJobs,
   updateSchedulerJob,
 } from '@/services/monitor/schedulerJob';
-import {recordZero} from "@/services/monitor/pipeline";
+import { recordZero } from '@/services/monitor/pipeline';
 
 type SystemPageProps = {
   calibration: CalibrationModelState;
@@ -52,7 +52,7 @@ const handleSchedulerJobRemove = async (fields: API.SchedulerJobItem) => {
   }
 };
 
-const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
+const System: React.FC<SystemPageProps> = ({ calibration, dispatch }) => {
   const [currentRow, setCurrentRow] = useState<API.SchedulerJobItem>();
 
   const [schedulerJobFormVisible, handleSchedulerJobFormVisible] = useState<boolean>(false);
@@ -64,23 +64,23 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
   const actionRef = useRef<ActionType>();
 
   const columns: ProColumns<API.SchedulerJobItem>[] = [
-    {title: '任务分组', dataIndex: 'jobGroup', key: 'jobGroup'},
-    {title: '任务名称', dataIndex: 'jobName', key: 'jobName'},
-    {title: '任务概要', dataIndex: 'content', key: 'content'},
-    {title: '执行间隔', dataIndex: 'jobInterval', key: 'jobInterval'},
+    { title: '任务分组', dataIndex: 'jobGroup', key: 'jobGroup' },
+    { title: '任务名称', dataIndex: 'jobName', key: 'jobName' },
+    { title: '任务概要', dataIndex: 'content', key: 'content' },
+    { title: '执行间隔(s)', dataIndex: 'jobInterval', key: 'jobInterval' },
     {
       title: '执行方式',
       dataIndex: 'runType',
       key: 'runType',
-      valueEnum: {1: '立即执行', 0: '延迟执行'},
+      valueEnum: { 1: '立即执行', 0: '延迟执行' },
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
       valueEnum: {
-        on: {text: <Tag color="green">启用</Tag>},
-        off: {text: <Tag color="magenta">禁用</Tag>},
+        on: { text: <Tag color="green">启用</Tag> },
+        off: { text: <Tag color="magenta">禁用</Tag> },
       },
       // valueEnum: { on: '启用', off: '禁用' },
     },
@@ -133,16 +133,16 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
 
   return (
     <PageContainer>
-      <Card title={'基准压力记录'} style={{marginBottom: 16}}>
+      <Card title={'基准压力记录'} style={{ marginBottom: 16 }}>
         <QueryFilter<API.CalibrationParam>
           onFinish={async (params) => {
-            const {pipelineId, create} = params;
+            const { pipelineId, create } = params;
             const [startTime, endTime] = create;
             await recordZero({
               pipelineId,
               startTime,
-              endTime
-            })
+              endTime,
+            });
             return true;
           }}
           submitter={{
@@ -166,7 +166,7 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
             fieldProps={{
               format: 'YYYY/MM/DD HH:mm:ss',
             }}
-            rules={[{required: true}]}
+            rules={[{ required: true }]}
           />
         </QueryFilter>
       </Card>
@@ -177,13 +177,13 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
         actionRef={actionRef}
         rowKey="id"
         request={(params) => {
-          const {pageSize: limit, current: page} = params;
-          return schedulerJobs({limit, page});
+          const { pageSize: limit, current: page } = params;
+          return schedulerJobs({ limit, page });
         }}
         toolBarRender={() => [
           <Button
             key="button"
-            icon={<PlusOutlined/>}
+            icon={<PlusOutlined />}
             type="primary"
             onClick={() => {
               setUpdate(false);
@@ -230,8 +230,8 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
   );
 };
 
-const mapStateToProps = ({calibration}: { calibration: CalibrationModelState }) => {
-  return {calibration};
+const mapStateToProps = ({ calibration }: { calibration: CalibrationModelState }) => {
+  return { calibration };
 };
 
 export default connect(mapStateToProps)(System);

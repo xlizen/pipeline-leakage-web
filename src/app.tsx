@@ -1,16 +1,16 @@
-import type {Settings as LayoutSettings} from '@ant-design/pro-layout';
-import {PageLoading} from '@ant-design/pro-layout';
-import type {RunTimeLayoutConfig} from 'umi';
-import {history} from 'umi';
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { PageLoading } from '@ant-design/pro-layout';
+import type { RunTimeLayoutConfig } from 'umi';
+import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import {currentUser as queryCurrentUser} from './services/monitor/api';
+import { currentUser as queryCurrentUser } from './services/monitor/api';
 
 const loginPath = '/user/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
-  loading: <PageLoading/>,
+  loading: <PageLoading />,
 };
 
 /**
@@ -46,16 +46,16 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({initialState}) => {
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    rightContentRender: () => <RightContent/>,
+    rightContentRender: () => <RightContent />,
     disableContentMargin: false,
-    waterMarkProps: {
-      content: initialState?.currentUser?.name,
-    },
-    footerRender: () => <Footer/>,
+    // waterMarkProps: {
+    //   content: initialState?.currentUser?.name,
+    // },
+    footerRender: () => <Footer />,
     onPageChange: () => {
-      const {location} = history;
+      const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);

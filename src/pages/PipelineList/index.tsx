@@ -1,9 +1,9 @@
-import {PageContainer} from '@ant-design/pro-layout';
-import type {Dispatch} from 'umi';
-import {connect} from 'umi';
-import {Button, message} from 'antd';
-import React, {useRef, useState} from 'react';
-import type {PipeLineModelState} from '@/models/pipeline';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { Dispatch } from 'umi';
+import { connect } from 'umi';
+import { Button, message } from 'antd';
+import React, { useRef, useState } from 'react';
+import type { PipeLineModelState } from '@/models/pipeline';
 import {
   deletePipeline,
   deleteSensor,
@@ -12,9 +12,9 @@ import {
   updatePipeline,
   updateSensor,
 } from '@/services/monitor/pipeline';
-import type {ActionType, ProColumns} from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import {PlusOutlined} from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import UpdateSensorKModal from './components/UpdateSensorKModal';
 import UpdatePipelineModal from './components/UpdatePipelineModal';
 import NewPipelineModal from './components/NewPipelineModal';
@@ -122,15 +122,15 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
 
   const expandedRowRender = (record: API.PipeLineListItem) => {
     const columns: ProColumns<API.SensorListItem>[] = [
-      {title: 'no', dataIndex: 'no', key: 'no'},
-      {title: '压力值', dataIndex: 'currentValue', key: 'currentValue'},
-      {title: '前置传感器', dataIndex: 'pre', key: 'pre'},
-      {title: '后置传感器', dataIndex: 'next', key: 'next'},
-      {title: '系数', dataIndex: 'k', key: 'k'},
-      {title: '传感器间距', dataIndex: 'l', key: 'l'},
-      {title: '管路半径', dataIndex: 'r', key: 'r'},
-      {title: '传感器类型', dataIndex: 'type', key: 'type'},
-      {title: '记录时间', dataIndex: 'createTime', key: 'createTime'},
+      { title: 'no', dataIndex: 'no', key: 'no' },
+      { title: '压力值(bar)', dataIndex: 'currentValue', key: 'currentValue' },
+      { title: '前置传感器', dataIndex: 'pre', key: 'pre' },
+      { title: '后置传感器', dataIndex: 'next', key: 'next' },
+      { title: '系数', dataIndex: 'k', key: 'k' },
+      { title: '传感器间距(m)', dataIndex: 'l', key: 'l' },
+      { title: '管路半径(m)', dataIndex: 'r', key: 'r' },
+      { title: '传感器类型', dataIndex: 'type', key: 'type' },
+      { title: '记录时间', dataIndex: 'createTime', key: 'createTime' },
       {
         title: '操作',
         dataIndex: 'operation',
@@ -173,10 +173,10 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
   };
 
   const columns: ProColumns<API.PipeLineListItem>[] = [
-    {title: 'ID', dataIndex: 'id', key: 'id', search: false},
-    {title: '管路名称', dataIndex: 'name', key: 'name'},
-    {title: '泄露标准', dataIndex: 'standard', key: 'standard'},
-    {title: '持续时间', dataIndex: 'duration', key: 'duration'},
+    { title: 'ID', dataIndex: 'id', key: 'id', search: false },
+    { title: '管路名称', dataIndex: 'name', key: 'name' },
+    { title: '泄露标准(m3/h)', dataIndex: 'standard', key: 'standard' },
+    { title: '持续时间(h)', dataIndex: 'duration', key: 'duration' },
     {
       title: '操作',
       dataIndex: 'operation',
@@ -214,8 +214,9 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
       <ProTable<API.PipeLineListItem>
         headerTitle={'管网信息'}
         columns={columns}
+        search={{ labelWidth: 'auto' }}
         request={(params) => {
-          const {pageSize: limit, current: page, ...filter} = params;
+          const { pageSize: limit, current: page, ...filter } = params;
           return pipelines({
             limit,
             page,
@@ -231,7 +232,7 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
         toolBarRender={() => [
           <Button
             key="button"
-            icon={<PlusOutlined/>}
+            icon={<PlusOutlined />}
             type="primary"
             onClick={() => {
               handlePipelineNewModalVisible(true);
@@ -290,8 +291,8 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
   );
 };
 
-const mapStateToProps = ({pipeline}: { pipeline: PipeLineModelState }) => {
-  return {pipeline};
+const mapStateToProps = ({ pipeline }: { pipeline: PipeLineModelState }) => {
+  return { pipeline };
 };
 
 export default connect(mapStateToProps)(PipelineList);

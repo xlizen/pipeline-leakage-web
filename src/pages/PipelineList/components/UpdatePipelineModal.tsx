@@ -37,7 +37,7 @@ const UpdatePipelineModal: React.FC<UpdatePipelineModalProps> = (props) => {
                   message: '',
                 },
               ]}
-              label="泄漏标准"
+              label="泄漏标准(m3/s)"
               width="md"
               name="standard"
             />
@@ -48,7 +48,7 @@ const UpdatePipelineModal: React.FC<UpdatePipelineModalProps> = (props) => {
                   message: '',
                 },
               ]}
-              label="持续时间"
+              label="持续时间(小时)"
               width="md"
               name="duration"
             />
