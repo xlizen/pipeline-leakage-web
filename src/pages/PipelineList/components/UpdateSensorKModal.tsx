@@ -19,7 +19,7 @@ const UpdateSensorKModal: React.FC<UpdateSensorProps> = (props) => {
           width={"416px"}
           initialValues={props.values}
         >
-          <ProFormText name="no" hidden={true}/>
+          <ProFormText name="id" hidden={true}/>
           <ProFormText label="系数K" name="k"/>
         </ModalForm>
       )}

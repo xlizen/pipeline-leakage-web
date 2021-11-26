@@ -29,6 +29,8 @@ export default {
   'menu.list.search-list.articles': 'Search List(articles)',
   'menu.list.search-list.projects': 'Search List(projects)',
   'menu.list.search-list.applications': 'Search List(applications)',
+  'menu.list.pipeline': 'Pipeline Information',
+  'menu.list.system': 'System Setting',
   'menu.profile': 'Profile',
   'menu.profile.basic': 'Basic Profile',
   'menu.profile.advanced': 'Advanced Profile',
@@ -49,4 +51,6 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+
+  'menu.title': 'Leakage Analysis'
 };

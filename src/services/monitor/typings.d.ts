@@ -137,6 +137,13 @@ declare namespace API {
     create: string[];
   };
 
+  type CalcKParams = {
+    pipelineId: string;
+    sensorId: string;
+    q: number;
+    end: string;
+  }
+
   type SchedulerJobItem = {
     id?: string | undefined;
     jobGroup: string;

@@ -4,6 +4,7 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
+
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
@@ -51,7 +52,7 @@ export default defineConfig({
   // Fast Refresh 热更新
   fastRefresh: {},
   nodeModulesTransform: { type: 'none' },
-  //mfsu: {},
+  mfsu: {},
   webpack5: {},
   exportStatic: {},
 });

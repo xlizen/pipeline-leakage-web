@@ -122,13 +122,13 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
 
   const expandedRowRender = (record: API.PipeLineListItem) => {
     const columns: ProColumns<API.SensorListItem>[] = [
-      {title: 'no', dataIndex: 'no', key: 'no'},
-      {title: '压力值', dataIndex: 'currentValue', key: 'currentValue'},
+      {title: 'ID', dataIndex: 'id', key: 'id'},
+      // {title: '压力值(bar)', dataIndex: 'currentValue', key: 'currentValue'},
       {title: '前置传感器', dataIndex: 'pre', key: 'pre'},
       {title: '后置传感器', dataIndex: 'next', key: 'next'},
       {title: '系数', dataIndex: 'k', key: 'k'},
-      {title: '传感器间距', dataIndex: 'l', key: 'l'},
-      {title: '管路半径', dataIndex: 'r', key: 'r'},
+      {title: '传感器间距(m)', dataIndex: 'l', key: 'l'},
+      {title: '管路半径(m)', dataIndex: 'r', key: 'r'},
       {title: '传感器类型', dataIndex: 'type', key: 'type'},
       {title: '记录时间', dataIndex: 'createTime', key: 'createTime'},
       {
@@ -175,8 +175,8 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
   const columns: ProColumns<API.PipeLineListItem>[] = [
     {title: 'ID', dataIndex: 'id', key: 'id', search: false},
     {title: '管路名称', dataIndex: 'name', key: 'name'},
-    {title: '泄露标准', dataIndex: 'standard', key: 'standard'},
-    {title: '持续时间', dataIndex: 'duration', key: 'duration'},
+    {title: '泄漏标准(m3/h)', dataIndex: 'standard', key: 'standard'},
+    {title: '持续时间(h)', dataIndex: 'duration', key: 'duration'},
     {
       title: '操作',
       dataIndex: 'operation',
@@ -214,6 +214,11 @@ const PipelineList: React.FC<PipelinePageProps> = () => {
       <ProTable<API.PipeLineListItem>
         headerTitle={'管网信息'}
         columns={columns}
+        form={
+          {
+            labelWidth:"auto"
+          }
+        }
         request={(params) => {
           const {pageSize: limit, current: page, ...filter} = params;
           return pipelines({

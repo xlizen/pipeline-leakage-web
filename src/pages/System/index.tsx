@@ -1,22 +1,29 @@
-import type {CalibrationModelState} from '@/models/calibration';
-import {PageContainer} from '@ant-design/pro-layout';
-import React, {useRef, useState} from 'react';
-import type {Dispatch} from 'umi';
-import {connect} from 'umi';
-import {ProFormDateTimeRangePicker, ProFormSelect, QueryFilter} from '@ant-design/pro-form';
-import {Button, Card, message, Tag} from 'antd';
-import type {ActionType, ProColumns} from '@ant-design/pro-table';
+import type { CalibrationModelState } from '@/models/calibration';
+import { PageContainer } from '@ant-design/pro-layout';
+import React, { useRef, useState } from 'react';
+import type { Dispatch } from 'umi';
+import { connect } from 'umi';
+import {
+  ProFormDateTimePicker,
+  ProFormDateTimeRangePicker,
+  ProFormSelect,
+  ProFormText,
+  QueryFilter,
+} from '@ant-design/pro-form';
+import type { FormInstance} from 'antd';
+import { Button, Card, message, Tag } from 'antd';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import SchedulerJobForm from '@/pages/System/components/SchedulerJobForm';
 import TableOperateCell from '@/components/TableOperateCell';
-import {PlusOutlined} from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import {
   deleteSchedulerJob,
   saveSchedulerJob,
   schedulerJobs,
   updateSchedulerJob,
 } from '@/services/monitor/schedulerJob';
-import {recordZero} from "@/services/monitor/pipeline";
+import { clacK, recordZero } from '@/services/monitor/pipeline';
 
 type SystemPageProps = {
   calibration: CalibrationModelState;
@@ -52,7 +59,7 @@ const handleSchedulerJobRemove = async (fields: API.SchedulerJobItem) => {
   }
 };
 
-const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
+const System: React.FC<SystemPageProps> = ({ calibration, dispatch }) => {
   const [currentRow, setCurrentRow] = useState<API.SchedulerJobItem>();
 
   const [schedulerJobFormVisible, handleSchedulerJobFormVisible] = useState<boolean>(false);
@@ -62,25 +69,27 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
   const [isUpdate, setUpdate] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
+  
+  const formRef = useRef<FormInstance>();
 
   const columns: ProColumns<API.SchedulerJobItem>[] = [
-    {title: '任务分组', dataIndex: 'jobGroup', key: 'jobGroup'},
-    {title: '任务名称', dataIndex: 'jobName', key: 'jobName'},
-    {title: '任务概要', dataIndex: 'content', key: 'content'},
-    {title: '执行间隔', dataIndex: 'jobInterval', key: 'jobInterval'},
+    { title: '任务分组', dataIndex: 'jobGroup', key: 'jobGroup' },
+    { title: '任务名称', dataIndex: 'jobName', key: 'jobName' },
+    { title: '任务概要', dataIndex: 'content', key: 'content' },
+    { title: '执行间隔(s)', dataIndex: 'jobInterval', key: 'jobInterval' },
     {
       title: '执行方式',
       dataIndex: 'runType',
       key: 'runType',
-      valueEnum: {1: '立即执行', 0: '延迟执行'},
+      valueEnum: { 1: '立即执行', 0: '延迟执行' },
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
       valueEnum: {
-        on: {text: <Tag color="green">启用</Tag>},
-        off: {text: <Tag color="magenta">禁用</Tag>},
+        on: { text: <Tag color="green">启用</Tag> },
+        off: { text: <Tag color="magenta">禁用</Tag> },
       },
       // valueEnum: { on: '启用', off: '禁用' },
     },
@@ -122,6 +131,9 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
                 if (actionRef.current) {
                   actionRef.current.reload();
                 }
+                dispatch({
+                  type: 'loadPipelineMap',
+                });
               }
               return success;
             },
@@ -131,18 +143,37 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
     },
   ];
 
+  const onValuesChange = (value: any) => {
+    const keys = Object.keys(value);
+    const key = keys[0];
+    switch (key) {
+      case 'pipelineId':
+        formRef.current?.setFieldsValue({
+          sensorId:null
+        });
+        dispatch({
+          type: 'calibration/loadSensorMap',
+          payload: value[key],
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <PageContainer>
-      <Card title={'基准压力记录'} style={{marginBottom: 16}}>
+      <Card title={'基准压力记录'} style={{ marginBottom: 16 }}>
         <QueryFilter<API.CalibrationParam>
+          labelWidth="auto"
           onFinish={async (params) => {
-            const {pipelineId, create} = params;
+            const { pipelineId, create } = params;
             const [startTime, endTime] = create;
             await recordZero({
               pipelineId,
               startTime,
-              endTime
-            })
+              endTime,
+            });
             return true;
           }}
           submitter={{
@@ -166,7 +197,51 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
             fieldProps={{
               format: 'YYYY/MM/DD HH:mm:ss',
             }}
-            rules={[{required: true}]}
+            rules={[{ required: true }]}
+          />
+        </QueryFilter>
+      </Card>
+      <Card title={'管路系数K计算'} style={{ marginBottom: 16 }}>
+        <QueryFilter<API.CalcKParams>
+          labelWidth="auto"
+          formRef={formRef}
+          onValuesChange={(value) => onValuesChange(value)}
+          onFinish={async (params) => {
+            await clacK(
+              params
+            );
+            return true;
+          }}
+          submitter={{
+            // 配置按钮文本
+            searchConfig: {
+              resetText: '重置',
+              submitText: '计算',
+            },
+          }}
+        >
+          <ProFormSelect
+            name="pipelineId"
+            label="管路"
+            showSearch
+            rules={[{ required: true }]}
+            valueEnum={calibration.pipelineMap}
+          />
+          <ProFormSelect
+            name="sensorId"
+            label="泄漏点"
+            showSearch
+            rules={[{ required: true }]}
+            valueEnum={calibration.sensorMap}
+          />
+          <ProFormText name="q" label="泄漏量(m3/h)" rules={[{ required: true }]}/>
+          <ProFormDateTimePicker
+            name="end"
+            label="基准时间"
+            fieldProps={{
+              format: 'YYYY/MM/DD HH:mm:ss',
+            }}
+            rules={[{ required: true }]}
           />
         </QueryFilter>
       </Card>
@@ -177,13 +252,13 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
         actionRef={actionRef}
         rowKey="id"
         request={(params) => {
-          const {pageSize: limit, current: page} = params;
-          return schedulerJobs({limit, page});
+          const { pageSize: limit, current: page } = params;
+          return schedulerJobs({ limit, page });
         }}
         toolBarRender={() => [
           <Button
             key="button"
-            icon={<PlusOutlined/>}
+            icon={<PlusOutlined />}
             type="primary"
             onClick={() => {
               setUpdate(false);
@@ -230,8 +305,8 @@ const System: React.FC<SystemPageProps> = ({calibration, dispatch}) => {
   );
 };
 
-const mapStateToProps = ({calibration}: { calibration: CalibrationModelState }) => {
-  return {calibration};
+const mapStateToProps = ({ calibration }: { calibration: CalibrationModelState }) => {
+  return { calibration };
 };
 
 export default connect(mapStateToProps)(System);

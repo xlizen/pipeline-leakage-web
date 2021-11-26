@@ -68,7 +68,7 @@ const SchedulerJobForm: React.FC<SchedulerJobFormProps> = (props) => {
             valueEnum={props.jobMap}
           />
           <ProFormText name="content" hidden={true} />
-          <ProFormText label="执行间隔" name="jobInterval" />
+          <ProFormText label="执行间隔(s)" name="jobInterval" />
           <ProFormRadio.Group
             name="runType"
             label="执行方式"
